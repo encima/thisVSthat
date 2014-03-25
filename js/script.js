@@ -7,17 +7,34 @@ document.getElementById('compare').addEventListener('click', function() {
 	var thisTxt = document.getElementById('this').value;
 	var thatTxt = document.getElementById('that').value;
 	if(thisTxt.length > 0 && thatTxt.length > 0) {
-		var thatDef, thisDef;
-		get(thatTxt, function(result) {
-			document.getElementById('thatDef').innerHTML = result[0].text;
-			get(thisTxt, function(result) {
-				document.getElementById('thisDef').innerHTML = result[0].text;
-			});	
-		});	
+		compare(thisTxt, thatTxt);
 	}else{
 		alert('Comparison: a consideration or estimate of the similarities or dissimilarities between two things or people.');
 	}
 });
+
+function compare(thisParam, thatParam) {
+	get(thisParam, function(result) {
+		document.getElementById('thisDef').innerHTML = result[0].text;
+		get(thatParam, function(result) {
+			document.getElementById('thatDef').innerHTML = result[0].text;
+		});	
+	});	
+}
+
+function checkParams() {
+	var thisParam = getURLParameter('this');
+	var thatParam = getURLParameter('that');
+	if(thisParam !== null && thatParam !== null) {
+		document.getElementById('this').value = thisParam;
+		document.getElementById('that').value = thatParam;
+		compare(thisParam, thatParam);
+	}
+}
+
+function getURLParameter(name) {
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+}
 
 function get(word, callback) {
 	var req = new XMLHttpRequest();	
